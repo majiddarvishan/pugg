@@ -281,7 +281,7 @@ Name convention changes break old code but it won't be very hard to replace old 
 
 - Name convention changes
 
-_ wstring support is removed
+- wstring support is removed
 
 - Server class is in Kernel.h and is used from Kernel class.
 

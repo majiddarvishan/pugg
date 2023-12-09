@@ -1,13 +1,10 @@
-# define minimum cmake version
-cmake_minimum_required(VERSION 2.6.2)
+PROJECT(zoo)
 
-PROJECT(Zoo)
+include_directories( "${CMAKE_SOURCE_DIR}/include")
 
-include_directories("../../include")
-set(SOURCES main.cpp Animal.h)
+add_executable(zoo main.cpp Animal.h)
 
-add_executable(Zoo ${SOURCES})
-target_link_libraries(Zoo
+target_link_libraries(zoo
     ${CMAKE_DL_LIBS}
 )
 

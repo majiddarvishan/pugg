@@ -22,8 +22,8 @@ int main()
     kernel.add_server(Animal::server_name(), Animal::version);
 
 #ifdef WIN32
-    #define DLL_PANTHALASSA_ANIMALS "PanthalassaAnimals.dll"
-    #define DLL_PANGEA_ANIMALS "PangeaAnimals.dll"
+    #define DLL_PANTHALASSA_ANIMALS "PanthalassaAnimals/PanthalassaAnimals.dll"
+    #define DLL_PANGEA_ANIMALS "PangeaAnimals/PangeaAnimals.dll"
 #else
     #define DLL_PANTHALASSA_ANIMALS "libPanthalassaAnimals.so"
     #define DLL_PANGEA_ANIMALS "libPangeaAnimals.so"

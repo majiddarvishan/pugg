@@ -1,12 +1,6 @@
-# define minimum cmake version
-cmake_minimum_required(VERSION 2.6.2)
-
 PROJECT(PanthalassaAnimals)
 
-include_directories("../../include")
-include_directories("../Zoo")
+include_directories("${CMAKE_SOURCE_DIR}/include")
+include_directories("${CMAKE_SOURCE_DIR}/examples/Zoo")
 
-set(SOURCES plugin.cpp Fish.h Whale.h)
-
-add_library(PanthalassaAnimals SHARED ${SOURCES})
-
+add_library(PanthalassaAnimals SHARED plugin.cpp Fish.h Whale.h)
