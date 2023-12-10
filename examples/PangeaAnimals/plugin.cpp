@@ -1,4 +1,4 @@
-#include <pugg/Kernel.h>
+#include <pugg/kernel.hpp>
 
 #include "Cat.h"
 #include "Dog.h"

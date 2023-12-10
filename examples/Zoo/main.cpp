@@ -1,4 +1,4 @@
-#include <pugg/Kernel.h>
+#include <pugg/kernel.hpp>
 
 #include "Animal.h"
 
@@ -25,8 +25,8 @@ int main()
     #define DLL_PANTHALASSA_ANIMALS "PanthalassaAnimals/PanthalassaAnimals.dll"
     #define DLL_PANGEA_ANIMALS "PangeaAnimals/PangeaAnimals.dll"
 #else
-    #define DLL_PANTHALASSA_ANIMALS "libPanthalassaAnimals.so"
-    #define DLL_PANGEA_ANIMALS "libPangeaAnimals.so"
+    #define DLL_PANTHALASSA_ANIMALS "./libPanthalassaAnimals.so"
+    #define DLL_PANGEA_ANIMALS "./libPangeaAnimals.so"
 #endif
 
     kernel.load_plugin(DLL_PANTHALASSA_ANIMALS);

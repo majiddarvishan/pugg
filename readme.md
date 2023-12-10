@@ -110,7 +110,7 @@ Note that version is the same version from the Animal class at the time Cat is c
 Let's export the Cat class from dll.
 
 ```C++
-#include <pugg\Kernel.h>
+#include <pugg\kernel.hpp>
 #include "Cat.h"
 
 #ifdef _WIN
@@ -129,7 +129,7 @@ register_pugg_plugin function is a special function called by Pugg to load drive
 Now in our main app, we can import dlls and have fun
 
 ```C++
-#include <pugg\Kernel.h>
+#include <pugg\kernel.hpp>
 #include <Animal.h>
 
 #include <iostream>
@@ -182,7 +182,7 @@ int main()
 #### Driver class registers user class to Pugg.
 
 ```C++
-// /include/pugg/Driver.h
+// /include/pugg/driver.hpp
 namespace pugg {
 class Driver
 {
@@ -203,7 +203,7 @@ class Driver
 
 ### Kernel
 ```C++
-// /include/pugg/Kernel.h
+// /include/pugg/kernel.hpp
 namespace pugg {
 class Kernel
 {
@@ -283,7 +283,7 @@ Name convention changes break old code but it won't be very hard to replace old 
 
 - wstring support is removed
 
-- Server class is in Kernel.h and is used from Kernel class.
+- Server class is in kernel.hpp and is used from Kernel class.
 
 - Changed to mercurial
 

@@ -8,8 +8,8 @@
 #include <map>
 #include <vector>
 
-#include "Driver.h"
-#include "Plugin.h"
+#include "driver.hpp"
+#include "plugin.hpp"
 
 namespace pugg {
 
@@ -116,18 +116,18 @@ public:
             return false;
         }
 	}
-	
+
 	void clear_drivers()
 	{
 		for (std::map<std::string,pugg::detail::Server*>::iterator iter = _servers.begin(); iter != _servers.end(); ++iter) {
 			iter->second->clear();
 		}
-	}	
-	
+	}
+
 	void clear()
 	{
         pugg::detail::delete_all_values(_servers);
-        pugg::detail::delete_all_values(_plugins);	
+        pugg::detail::delete_all_values(_plugins);
 	}
 
 protected:

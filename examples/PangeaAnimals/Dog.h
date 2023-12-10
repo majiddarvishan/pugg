@@ -1,6 +1,6 @@
 #pragma once
 
-#include <pugg/Driver.h>
+#include <pugg/driver.hpp>
 #include <Animal.h>
 
 class Dog : public Animal
