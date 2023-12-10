@@ -1,1 +1,1 @@
-find ../include/ -iname *.hpp | xargs clang-format-14 -i
+find ../include/ -iname *.hpp | xargs clang-format -i
