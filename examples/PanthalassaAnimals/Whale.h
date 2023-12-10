@@ -8,9 +8,9 @@ public:
     bool can_swim() {return true;}
 };
 
-class WhaleDriver : public AnimalDriver
+class Whaledriver : public Animaldriver
 {
 public:
-    WhaleDriver() : AnimalDriver("WhaleDriver", Whale::version) {}
+    Whaledriver() : Animaldriver("Whaledriver", Whale::version) {}
     Animal* create() {return new Whale();}
 };

@@ -71,17 +71,17 @@ class Animal
 public:
     // ....
     static const int version = 1;
-    static const std::string server_name() {return "AnimalServer";}
+    static const std::string server_name() {return "Animalserver";}
 };
 ```
 Then add a driver to tell the name and version of the server to Pugg.
 
 ```C++
-class AnimalDriver : public pugg::Driver
+class Animaldriver : public pugg::driver
 {
 public :
-    AnimalDriver(std::string name, int version)
-        : pugg::Driver(Animal::server_name(),name,version) {}
+    Animaldriver(std::string name, int version)
+        : pugg::driver(Animal::server_name(),name,version) {}
     virtual Animal* create() = 0 ;
 };
 ```
@@ -96,10 +96,10 @@ public :
 };
 
 
-class CatDriver : public AnimalDriver
+class Catdriver : public Animaldriver
 {
 public :
-    CatDriver() : AnimalDriver("CatDriver", Cat::version) {}
+    Catdriver() : Animaldriver("Catdriver", Cat::version) {}
     Animal* create() { return new Cat();}
 };
 ```
@@ -119,9 +119,9 @@ Let's export the Cat class from dll.
 # define EXPORTIT
 #endif
 
-extern "C" EXPORTIT void register_pugg_plugin(pugg::Kernel* kernel)
+extern "C" EXPORTIT void register_pugg_plugin(pugg::kernel* kernel)
 {
-    kernel->add_driver( new CatDriver());
+    kernel->add_driver( new Catdriver());
 }
 ```
 register_pugg_plugin function is a special function called by Pugg to load drivers from a dll file.
@@ -140,7 +140,7 @@ using namespace std;
 int main()
 {
     cout << "Loading plugins..." << endl;
-    pugg::Kernel kernel;
+    pugg::kernel kernel;
     kernel.add_server(Animal::server_name(), Animal::version);
     #ifdef WIN
     kernel.load_plugin("PangeaAnimals.dll"); // Cat class is in this dll.
@@ -150,15 +150,15 @@ int main()
     ```
     ```
     // we can load all drivers from a specific server
-    vector<AnimalDriver*> drivers =kernel.get_all_drivers<AnimalDriver>(Animal::server_name());
+    vector<Animaldriver*> drivers =kernel.get_all_drivers<Animaldriver>(Animal::server_name());
     // to load a specific driver
     ```
 
     ```
-    // AnimalDriver* animal_driver = kernel.get_driver<AnimalDriver>(Animal::server_name, "CatDriver");
+    // Animaldriver* animal_driver = kernel.get_driver<Animaldriver>(Animal::server_name, "Catdriver");
     vector<Animal*> animals;
-    for (vector<AnimalDriver*>::iterator iter = drivers.begin(); iter != drivers.end(); ++iter) {
-    AnimalDriver& driver = *(*iter);
+    for (vector<Animaldriver*>::iterator iter = drivers.begin(); iter != drivers.end(); ++iter) {
+    Animaldriver& driver = *(*iter);
     animals.push_back(driver.create());
     }
     ```
@@ -177,21 +177,21 @@ int main()
 
 ## Class Documentation
 
-### Driver
+### driver
 
-#### Driver class registers user class to Pugg.
+#### driver class registers user class to Pugg.
 
 ```C++
 // /include/pugg/driver.hpp
 namespace pugg {
-class Driver
+class driver
 {
     public :
     // server_name : Name of the server driver belongs to.
     // name : Name of the driver
     // version : version of the driver
-    Driver(std::string server_name, std::string name, int version)
-    virtual ~Driver() {}
+    driver(std::string server_name, std::string name, int version)
+    virtual ~driver() {}
     ```
     ```
     std::string server_name() const { return _server_name;}
@@ -201,14 +201,14 @@ class Driver
 }
 ```
 
-### Kernel
+### kernel
 ```C++
 // /include/pugg/kernel.hpp
 namespace pugg {
-class Kernel
+class kernel
 {
 public :
-    ~Kernel(); // destroys drivers, servers and links to dll files.
+    ~kernel(); // destroys drivers, servers and links to dll files.
     // loads drivers from the dll file
     bool load_plugin( const std::string& filename);
     // adds a server
@@ -217,14 +217,14 @@ public :
     // Lower version drivers are not loaded.
     void add_server(std::string name, int min_driver_version );
     // adds a driver. usually called in the register_pugg_plugin function of dlls.
-    bool add_driver(pugg::Driver* driver);
+    bool add_driver(pugg::driver* driver);
 
     // gets a specific driver from a server
-    template < class DriverType>
-    DriverType* get_driver( const std::string& server_name, const std::string& name);
+    template < class driverType>
+    driverType* get_driver( const std::string& server_name, const std::string& name);
     // gets all drivers from a server
-    template < class DriverType>
-    std::vector<DriverType*> get_all_drivers( const std::string& server_name);
+    template < class driverType>
+    std::vector<driverType*> get_all_drivers( const std::string& server_name);
     // clears all drivers
     void clear_drivers();
     // clears all drivers, servers and plugins
@@ -271,7 +271,7 @@ Name convention changes break old code but it won't be very hard to replace old 
 
 ### 0.51
 
-- Removed unnecessary try catch block from Plugin.cpp
+- Removed unnecessary try catch block from plugin.cpp
 
 ### 0.5
 
@@ -283,13 +283,13 @@ Name convention changes break old code but it won't be very hard to replace old 
 
 - wstring support is removed
 
-- Server class is in kernel.hpp and is used from Kernel class.
+- server class is in kernel.hpp and is used from kernel class.
 
 - Changed to mercurial
 
 ### 0.41
 
-- A memory leak occurring while trying to load dll files not having the registerPlugin function is fixed.
+- A memory leak occurring while trying to load dll files not having the registerplugin function is fixed.
 
 ### 0.4
 
@@ -312,7 +312,7 @@ Name convention changes break old code but it won't be very hard to replace old 
 
 - Version control system on plug-in system is removed. Every driver's version is controlled separately.
 
-- Server class became template, removing the need to write a server class for every driver and casting the drivers before usage.
+- server class became template, removing the need to write a server class for every driver and casting the drivers before usage.
 
 ### 0.11
 

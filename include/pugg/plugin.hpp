@@ -21,16 +21,16 @@
 
 namespace pugg {
 
-class Kernel;
+class kernel;
 
 namespace detail {
-	
-typedef void fnRegisterPlugin(pugg::Kernel*);
 
-class DllLoader
+typedef void fnRegisterplugin(pugg::kernel*);
+
+class dll_loader
 {
 public:
-    ~DllLoader()
+    ~dll_loader()
     {
         this->free();
     }
@@ -44,12 +44,12 @@ public:
 #endif
         return (_handle != NULL);
     }
-    fnRegisterPlugin* register_function()
+    fnRegisterplugin* register_function()
     {
 #ifdef WIN32
-        return reinterpret_cast<fnRegisterPlugin*>(GetProcAddress(_handle, "register_pugg_plugin"));
+        return reinterpret_cast<fnRegisterplugin*>(GetProcAddress(_handle, "register_pugg_plugin"));
 #else
-        return reinterpret_cast<fnRegisterPlugin*>(dlsym(_handle, "register_pugg_plugin"));
+        return reinterpret_cast<fnRegisterplugin*>(dlsym(_handle, "register_pugg_plugin"));
 #endif
     }
     void free()
@@ -68,32 +68,32 @@ private:
 #endif
 };
 
-class Plugin
+class plugin
 {
 public:
-	Plugin() : _register_function(NULL) {}
+	plugin() : register_function_(NULL) {}
 
 	bool load(const std::string& filename)
 	{
-        if (! _dll_loader.load(filename)) return false;
-        _register_function = _dll_loader.register_function();
+        if (! dll_loader_.load(filename)) return false;
+        register_function_ = dll_loader_.register_function();
 
-        if (_register_function) {
+        if (register_function_) {
             return true;
         } else {
-            _dll_loader.free();            
+            dll_loader_.free();
             return false;
         }
     }
 
-	void register_plugin(pugg::Kernel* kernel)
+	void register_plugin(pugg::kernel* kernel)
 	{
-		_register_function(kernel);
+		register_function_(kernel);
 	}
 private:
 
-	fnRegisterPlugin* _register_function;
-    DllLoader _dll_loader;
+	fnRegisterplugin* register_function_;
+    dll_loader dll_loader_;
 };
 
 

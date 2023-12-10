@@ -19,11 +19,11 @@ private :
 ```
 ## Rationale
 
-**Copying of strings in Kernel class:** Copying of Driver and Server names obviously decrease performance, however I don't think this will be a major hit for most projects.
+**Copying of strings in kernel class:** Copying of driver and server names obviously decrease performance, however I don't think this will be a major hit for most projects.
 
 **Omitting C++11 features:** I didn't want to exclude any compiler version.
 
-**Error Handling and function returns:** Functions that could not add or get Drivers can fail due to many reasons. I didn't want to handle them with exceptions because these failures are commonly ignored. Exceptions for some conditions that should not occur and some information about failures for ignored cases should be added later.
+**Error Handling and function returns:** Functions that could not add or get drivers can fail due to many reasons. I didn't want to handle them with exceptions because these failures are commonly ignored. Exceptions for some conditions that should not occur and some information about failures for ignored cases should be added later.
 
 **std::wstring feature and unicode filename support** Unicode is problematic in C++ and old version of handling strings with templates complicated to code. Could be added later.
 

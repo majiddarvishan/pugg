@@ -13,7 +13,7 @@
 
 namespace pugg {
 
-class Kernel;
+class kernel;
 
 namespace detail {
 
@@ -30,46 +30,46 @@ void delete_all_values(std::vector<V>& vec) {
     }
 }
 
-class Server
+class server
 {
 public:
-	Server(std::string name, int min_driver_version) : _name(name), _min_driver_version(min_driver_version) {}
-    ~Server() {delete_all_values(_drivers);}
+	server(std::string name, int min_driver_version) : name_(name), min_driver_version_(min_driver_version) {}
+    ~server() {delete_all_values(drivers_);}
 
-    std::string name() {return _name;}
-    int min_driver_version() {return _min_driver_version;}
-    std::map<std::string, Driver*>& drivers() {return _drivers;}
+    std::string name() {return name_;}
+    int min_driver_version() {return min_driver_version_;}
+    std::map<std::string, driver*>& drivers() {return drivers_;}
 
 	void clear()
 	{
-		delete_all_values(_drivers);
+		delete_all_values(drivers_);
 	}
 private:
-	std::string _name;
-	int _min_driver_version;
-	std::map<std::string, Driver*> _drivers;
+	std::string name_;
+	int min_driver_version_;
+	std::map<std::string, driver*> drivers_;
 };
 }
 
-class Kernel
+class kernel
 {
 public:
-	virtual ~Kernel()
+	virtual ~kernel()
     {
-        pugg::detail::delete_all_values(_servers);
-        pugg::detail::delete_all_values(_plugins);
+        pugg::detail::delete_all_values(servers_);
+        pugg::detail::delete_all_values(plugins_);
     }
 
 	void add_server(std::string name, int min_driver_version )
 	{
-        _servers[name] = new pugg::detail::Server(name, min_driver_version);
+        servers_[name] = new pugg::detail::server(name, min_driver_version);
 	}
 
-	bool add_driver(pugg::Driver* driver)
+	bool add_driver(pugg::driver* driver)
 	{
         if (! driver) return false;
 
-        pugg::detail::Server* server = _get_server(driver->server_name());
+        pugg::detail::server* server = get_server(driver->server_name());
         if (! server) return NULL;
 
         if (server->min_driver_version() > driver->version()) return false;
@@ -78,27 +78,27 @@ public:
         return true;
 	}
 
-    template <class DriverType>
-    DriverType* get_driver(const std::string& server_name, const std::string& name)
+    template <class driverType>
+    driverType* get_driver(const std::string& server_name, const std::string& name)
     {
-        pugg::detail::Server* server = _get_server(server_name);
+        pugg::detail::server* server = get_server(server_name);
         if (! server) return NULL;
 
-        std::map<std::string,pugg::Driver*>::iterator driver_iter = server->drivers().find(name);
+        std::map<std::string,pugg::driver*>::iterator driver_iter = server->drivers().find(name);
         if (driver_iter == server->drivers().end()) return NULL;
-        return static_cast<DriverType*>(driver_iter->second);
+        return static_cast<driverType*>(driver_iter->second);
     }
 
-    template <class DriverType>
-    std::vector<DriverType*> get_all_drivers(const std::string& server_name)
+    template <class driverType>
+    std::vector<driverType*> get_all_drivers(const std::string& server_name)
     {
-        std::vector<DriverType*> drivers;
+        std::vector<driverType*> drivers;
 
-        pugg::detail::Server* server = _get_server(server_name);
+        pugg::detail::server* server = get_server(server_name);
         if (! server) return drivers;
 
-        for (std::map<std::string, pugg::Driver*>::iterator iter = server->drivers().begin(); iter != server->drivers().end(); ++iter) {
-            drivers.push_back(static_cast<DriverType*>(iter->second));
+        for (std::map<std::string, pugg::driver*>::iterator iter = server->drivers().begin(); iter != server->drivers().end(); ++iter) {
+            drivers.push_back(static_cast<driverType*>(iter->second));
         }
         return drivers;
     }
@@ -106,10 +106,10 @@ public:
 
 	bool load_plugin(const std::string& filename)
 	{
-        pugg::detail::Plugin* plugin = new pugg::detail::Plugin();
+        pugg::detail::plugin* plugin = new pugg::detail::plugin();
         if (plugin->load(filename)) {
             plugin->register_plugin(this);
-            _plugins.push_back(plugin);
+            plugins_.push_back(plugin);
             return true;
         } else {
             delete plugin;
@@ -119,25 +119,25 @@ public:
 
 	void clear_drivers()
 	{
-		for (std::map<std::string,pugg::detail::Server*>::iterator iter = _servers.begin(); iter != _servers.end(); ++iter) {
+		for (std::map<std::string,pugg::detail::server*>::iterator iter = servers_.begin(); iter != servers_.end(); ++iter) {
 			iter->second->clear();
 		}
 	}
 
 	void clear()
 	{
-        pugg::detail::delete_all_values(_servers);
-        pugg::detail::delete_all_values(_plugins);
+        pugg::detail::delete_all_values(servers_);
+        pugg::detail::delete_all_values(plugins_);
 	}
 
 protected:
-	std::map<std::string,pugg::detail::Server*> _servers;
-    std::vector<pugg::detail::Plugin*> _plugins;
+	std::map<std::string,pugg::detail::server*> servers_;
+    std::vector<pugg::detail::plugin*> plugins_;
 
-    pugg::detail::Server* _get_server(const std::string& name)
+    pugg::detail::server* get_server(const std::string& name)
     {
-        std::map<std::string,pugg::detail::Server*>::iterator server_iter = _servers.find(name);
-        if (server_iter == _servers.end())
+        std::map<std::string,pugg::detail::server*>::iterator server_iter = servers_.find(name);
+        if (server_iter == servers_.end())
             return NULL;
         else
             return server_iter->second;

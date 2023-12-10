@@ -4,22 +4,22 @@
 
 namespace pugg {
 
-class Driver
+class driver
 {
 public:
-    Driver(std::string server_name, std::string name, int version)
-        : _server_name(server_name), _name(name), _version(version)
+    driver(std::string server_name, std::string name, int version)
+        : server_name_(server_name), name_(name), version_(version)
     {}
-    virtual ~Driver() {}
+    virtual ~driver() {}
 
-    std::string server_name() const {return _server_name;}
-    std::string name() const {return _name;}
-    int version() const {return _version;}
+    std::string server_name() const {return server_name_;}
+    std::string name() const {return name_;}
+    int version() const {return version_;}
 
 private:
-    std::string _name;
-    std::string _server_name;
-    int _version;
+    std::string name_;
+    std::string server_name_;
+    int version_;
 };
 
 

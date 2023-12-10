@@ -18,7 +18,7 @@ int main()
     cout << "Loading plugins..." << endl;
 
 
-    pugg::Kernel kernel;
+    pugg::kernel kernel;
     kernel.add_server(Animal::server_name(), Animal::version);
 
 #ifdef WIN32
@@ -32,10 +32,10 @@ int main()
     kernel.load_plugin(DLL_PANTHALASSA_ANIMALS);
     kernel.load_plugin(DLL_PANGEA_ANIMALS);
 
-    vector<AnimalDriver*> drivers = kernel.get_all_drivers<AnimalDriver>(Animal::server_name());
+    vector<Animaldriver*> drivers = kernel.get_all_drivers<Animaldriver>(Animal::server_name());
     vector<Animal*> animals;
-    for (vector<AnimalDriver*>::iterator iter = drivers.begin(); iter != drivers.end(); ++iter) {
-        AnimalDriver& driver = *(*iter);
+    for (vector<Animaldriver*>::iterator iter = drivers.begin(); iter != drivers.end(); ++iter) {
+        Animaldriver& driver = *(*iter);
         animals.push_back(driver.create());
     }
 

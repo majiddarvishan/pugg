@@ -12,12 +12,12 @@ public:
     virtual bool can_swim() = 0;
 
     static const int version = 1;
-    static const std::string server_name() {return "AnimalServer";}
+    static const std::string server_name() {return "Animalserver";}
 };
 
-class AnimalDriver : public pugg::Driver
+class Animaldriver : public pugg::driver
 {
 public:
-    AnimalDriver(std::string name, int version) : pugg::Driver(Animal::server_name(),name,version) {}
+    Animaldriver(std::string name, int version) : pugg::driver(Animal::server_name(),name,version) {}
     virtual Animal* create() = 0;
 };

@@ -9,9 +9,9 @@ public:
     bool can_swim() {return false;}
 };
 
-class CatDriver : public AnimalDriver
+class Catdriver : public Animaldriver
 {
 public:
-    CatDriver() : AnimalDriver("CatDriver", Cat::version) {}
+    Catdriver() : Animaldriver("Catdriver", Cat::version) {}
     Animal* create() {return new Cat();}
 };

@@ -9,8 +9,8 @@
 #  define EXPORTIT
 #endif
 
-extern "C" EXPORTIT void register_pugg_plugin(pugg::Kernel* kernel)
+extern "C" EXPORTIT void register_pugg_plugin(pugg::kernel* kernel)
 {
-	kernel->add_driver(new CatDriver());
-	kernel->add_driver(new DogDriver());
+	kernel->add_driver(new Catdriver());
+	kernel->add_driver(new Dogdriver());
 }
