@@ -32,9 +32,9 @@ int main()
     kernel.load_plugin(DLL_PANTHALASSA_ANIMALS);
     kernel.load_plugin(DLL_PANGEA_ANIMALS);
 
-    vector<Animaldriver*> drivers = kernel.get_all_drivers<Animaldriver>(Animal::server_name());
+    auto drivers = kernel.get_all_drivers<Animaldriver>(Animal::server_name());
     vector<Animal*> animals;
-    for (vector<Animaldriver*>::iterator iter = drivers.begin(); iter != drivers.end(); ++iter) {
+    for (auto iter = drivers.begin(); iter != drivers.end(); ++iter) {
         Animaldriver& driver = *(*iter);
         animals.push_back(driver.create());
     }

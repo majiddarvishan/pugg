@@ -11,6 +11,6 @@
 
 extern "C" EXPORTIT void register_pugg_plugin(pugg::kernel* kernel)
 {
-	kernel->add_driver(new Fishdriver());
-	kernel->add_driver(new Whaledriver());
+    kernel->add_driver(std::make_shared<Fishdriver>());
+    kernel->add_driver(std::make_shared<Whaledriver>());
 }

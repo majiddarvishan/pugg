@@ -84,17 +84,16 @@ class plugin
     {
         if (!dll_loader_.load(filename))
             return false;
+
         register_function_ = dll_loader_.register_function();
 
         if (register_function_)
         {
             return true;
         }
-        else
-        {
-            dll_loader_.free();
-            return false;
-        }
+
+        dll_loader_.free();
+        return false;
     }
 
     void register_plugin(pugg::kernel* kernel)
