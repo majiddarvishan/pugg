@@ -115,23 +115,19 @@ class kernel
 
     bool load_plugin(const std::string& filename)
     {
-        pugg::detail::plugin* plugin = new pugg::detail::plugin();
-        if (plugin->load(filename))
+        auto p = std::make_unique<pugg::detail::plugin>();
+        if (p->load(filename))
         {
-            plugin->register_plugin(this);
-            plugins_.push_back(plugin);
+            p->register_plugin(this);
+            plugins_.push_back(std::move(p));
             return true;
         }
-        else
-        {
-            delete plugin;
-            return false;
-        }
+        return false;
     }
 
     void clear_drivers()
     {
-        for (std::map<std::string, pugg::detail::server*>::iterator iter = servers_.begin(); iter != servers_.end(); ++iter)
+        for (auto iter = servers_.begin(); iter != servers_.end(); ++iter)
         {
             iter->second->clear();
         }
@@ -145,11 +141,11 @@ class kernel
 
   protected:
     std::map<std::string, pugg::detail::server*> servers_;
-    std::vector<pugg::detail::plugin*> plugins_;
+    std::vector<std::unique_ptr<pugg::detail::plugin>> plugins_;
 
     pugg::detail::server* get_server(const std::string& name)
     {
-        std::map<std::string, pugg::detail::server*>::iterator server_iter = servers_.find(name);
+        auto server_iter = servers_.find(name);
         if (server_iter == servers_.end())
             return NULL;
 

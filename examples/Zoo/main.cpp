@@ -17,13 +17,12 @@ int main()
     cout << "Zoo loads animals from plugins" << endl;
     cout << "Loading plugins..." << endl;
 
-
     pugg::kernel kernel;
     kernel.add_server(Animal::server_name(), Animal::version);
 
 #ifdef WIN32
-    #define DLL_PANTHALASSA_ANIMALS "PanthalassaAnimals/PanthalassaAnimals.dll"
-    #define DLL_PANGEA_ANIMALS "PangeaAnimals/PangeaAnimals.dll"
+    #define DLL_PANTHALASSA_ANIMALS "PanthalassaAnimals.dll"
+    #define DLL_PANGEA_ANIMALS "PangeaAnimals.dll"
 #else
     #define DLL_PANTHALASSA_ANIMALS "./libPanthalassaAnimals.so"
     #define DLL_PANGEA_ANIMALS "./libPangeaAnimals.so"
@@ -31,7 +30,6 @@ int main()
 
     kernel.load_plugin(DLL_PANTHALASSA_ANIMALS);
     kernel.load_plugin(DLL_PANGEA_ANIMALS);
-
     auto drivers = kernel.get_all_drivers<Animaldriver>(Animal::server_name());
     vector<Animal*> animals;
     for (auto iter = drivers.begin(); iter != drivers.end(); ++iter) {
