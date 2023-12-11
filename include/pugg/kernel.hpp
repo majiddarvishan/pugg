@@ -24,9 +24,34 @@ class server
         drivers_.clear();
     }
 
-    std::map<std::string, std::shared_ptr<driver>>& drivers()
+    bool add_driver(std::string name, std::shared_ptr<driver> d)
     {
-        return drivers_;
+        const auto [it, success] = drivers_.insert({name, d});
+        return success;
+
+    }
+
+    template<class driver_type>
+    std::shared_ptr<driver_type> get_driver(const std::string& name) const
+    {
+        auto it = drivers_.find(name);
+        if (it != drivers_.end())
+            return std::dynamic_pointer_cast<driver_type>(it->second);
+
+        return nullptr;
+    }
+
+    template<class driver_type>
+    std::vector<std::shared_ptr<driver_type>> get_all_drivers() const
+    {
+        std::vector<std::shared_ptr<driver_type>> drivers;
+
+        for (auto it = drivers_.begin(); it != drivers_.end(); ++it)
+        {
+            drivers.push_back(std::dynamic_pointer_cast<driver_type>(it->second));
+        }
+
+        return drivers;
     }
 
     void clear()
@@ -49,35 +74,24 @@ class kernel
         plugins_.clear();
     }
 
-    bool add_driver(std::shared_ptr<pugg::driver> driver)
+    bool add_driver(std::shared_ptr<pugg::driver> d)
     {
-        if (!driver)
+        if (!d)
             return false;
 
-        server_.drivers()[driver->name()] = driver;
-        return true;
+        return server_.add_driver(d->name(), d);
     }
 
-    template<class driverType>
-    std::shared_ptr<driverType> get_driver(const std::string& server_name, const std::string& name)
+    template<class driver_type>
+    std::shared_ptr<driver_type> get_driver(const std::string& name) const
     {
-        auto driver_iter = server_.drivers().find(name);
-        if (driver_iter == server_.drivers().end())
-            return NULL;
-
-        return std::dynamic_pointer_cast<driverType>(driver_iter->second);
+        return server_.get_driver<driver_type>(name);
     }
 
-    template<class driverType>
-    std::vector<std::shared_ptr<driverType>> get_all_drivers(const std::string& server_name)
+    template<class driver_type>
+    std::vector<std::shared_ptr<driver_type>> get_all_drivers() const
     {
-        std::vector<std::shared_ptr<driverType>> drivers;
-
-        for (auto iter = server_.drivers().begin(); iter != server_.drivers().end(); ++iter)
-        {
-            drivers.push_back(std::dynamic_pointer_cast<driverType>(iter->second));
-        }
-        return drivers;
+        return server_.get_all_drivers<driver_type>();
     }
 
     bool load_plugin(const std::string& filename)
