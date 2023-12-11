@@ -18,7 +18,7 @@ int main()
     cout << "Loading plugins..." << endl;
 
     pugg::kernel kernel;
-    kernel.add_server(Animal::server_name(), Animal::version);
+    // kernel.add_server(Animal::server_name(), Animal::version);
 
 #ifdef WIN32
     #define DLL_PANTHALASSA_ANIMALS "PanthalassaAnimals.dll"
