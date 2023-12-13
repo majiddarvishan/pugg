@@ -27,8 +27,14 @@ int main()
     #define DLL_PANGEA_ANIMALS "./libPangeaAnimals.so"
 #endif
 
-    kernel.load_plugin(DLL_PANTHALASSA_ANIMALS);
-    kernel.load_plugin(DLL_PANGEA_ANIMALS);
+    // kernel.load_plugin(DLL_PANTHALASSA_ANIMALS);
+    // kernel.load_plugin(DLL_PANGEA_ANIMALS);
+
+    kernel.load_plugin(DLL_PANTHALASSA_ANIMALS, "fish");
+    kernel.load_plugin(DLL_PANTHALASSA_ANIMALS, "whale");
+    kernel.load_plugin(DLL_PANGEA_ANIMALS, "cat");
+    kernel.load_plugin(DLL_PANGEA_ANIMALS, "dog");
+
     auto drivers = kernel.get_all_drivers<Animaldriver>();
     vector<Animal*> animals;
     for (auto iter = drivers.begin(); iter != drivers.end(); ++iter) {

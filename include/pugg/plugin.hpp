@@ -14,13 +14,18 @@
 #include <dlfcn.h>
 #endif
 
+#include <functional>
+#include <memory>
+
 namespace pugg
 {
 class kernel;
 
 namespace detail
 {
-typedef void fnRegisterplugin(pugg::kernel*);
+// using fn_create_plugin =  std::function<std::shared_ptr<pugg::driver>(const std::string& name)>;
+
+typedef pugg::driver* fnRegisterplugin(const std::string& name);
 
 class dll_loader
 {
@@ -43,9 +48,9 @@ class dll_loader
     fnRegisterplugin* register_function()
     {
 #ifdef WIN32
-        return reinterpret_cast<fnRegisterplugin*>(GetProcAddress(handle_, "register_pugg_plugin"));
+        return reinterpret_cast<fnRegisterplugin*>(GetProcAddress(handle_, "create_driver"));
 #else
-        return reinterpret_cast<fnRegisterplugin*>(dlsym(handle_, "register_pugg_plugin"));
+        return reinterpret_cast<fnRegisterplugin*>(dlsym(handle_, "create_driver"));
 #endif
     }
 
@@ -80,13 +85,12 @@ class plugin
     {
     }
 
-    bool load(const std::string& filename)
+    bool load(const std::string& file_name)
     {
-        if (!dll_loader_.load(filename))
+        if (!dll_loader_.load(file_name))
             return false;
 
         register_function_ = dll_loader_.register_function();
-
         if (register_function_)
         {
             return true;
@@ -96,9 +100,10 @@ class plugin
         return false;
     }
 
-    void register_plugin(pugg::kernel* kernel)
+    std::shared_ptr<pugg::driver> create_driver(const std::string& name)
     {
-        register_function_(kernel);
+        auto d = register_function_(name);
+        return std::shared_ptr<pugg::driver>(d);
     }
 
   private:

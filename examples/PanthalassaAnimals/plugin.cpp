@@ -1,5 +1,3 @@
-#include <pugg/kernel.hpp>
-
 #include "Fish.h"
 #include "Whale.h"
 
@@ -9,8 +7,24 @@
 #  define EXPORTIT
 #endif
 
-extern "C" EXPORTIT void register_pugg_plugin(pugg::kernel* kernel)
+// extern "C" EXPORTIT std::shared_ptr<pugg::driver> create_driver(const std::string& name)
+// {
+//     if(name == "fish")
+//         return std::make_shared<Fishdriver>();
+
+//     if(name == "whale")
+//         return std::make_shared<Whaledriver>();
+
+//     return nullptr;
+// }
+
+extern "C" EXPORTIT pugg::driver* create_driver(const std::string& name)
 {
-    kernel->add_driver(std::make_shared<Fishdriver>());
-    kernel->add_driver(std::make_shared<Whaledriver>());
+    if(name == "fish")
+        return new Fishdriver();
+
+    if(name == "whale")
+        return new Whaledriver();
+
+    return nullptr;
 }

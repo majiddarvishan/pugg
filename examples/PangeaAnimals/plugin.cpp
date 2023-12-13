@@ -1,5 +1,3 @@
-#include <pugg/kernel.hpp>
-
 #include "Cat.h"
 #include "Dog.h"
 
@@ -9,8 +7,24 @@
 #  define EXPORTIT
 #endif
 
-extern "C" EXPORTIT void register_pugg_plugin(pugg::kernel* kernel)
+// extern "C" EXPORTIT std::shared_ptr<pugg::driver> create_driver(const std::string& name)
+// {
+//     if(name == "cat")
+//         return std::make_shared<Catdriver>();
+
+//     if(name == "dog")
+//         return std::make_shared<Dogdriver>();
+
+//     return nullptr;
+// }
+
+extern "C" EXPORTIT pugg::driver* create_driver(const std::string& name)
 {
-    kernel->add_driver(std::make_shared<Catdriver>());
-    kernel->add_driver(std::make_shared<Dogdriver>());
+    if(name == "cat")
+        return new Catdriver();
+
+    if(name == "dog")
+        return new Dogdriver();
+
+    return nullptr;
 }
