@@ -24,8 +24,7 @@ class kernel;
 namespace detail
 {
 // using fn_create_plugin =  std::function<std::shared_ptr<pugg::driver>(const std::string& name)>;
-
-typedef pugg::driver* fnRegisterplugin(const std::string& name);
+typedef std::shared_ptr<pugg::driver> fnRegisterplugin(const std::string& name);
 
 class dll_loader
 {
@@ -102,8 +101,7 @@ class plugin
 
     std::shared_ptr<pugg::driver> create_driver(const std::string& name)
     {
-        auto d = register_function_(name);
-        return std::shared_ptr<pugg::driver>(d);
+        return register_function_(name);
     }
 
   private:
