@@ -94,12 +94,17 @@ class kernel
         return server_.get_all_drivers<driver_type>();
     }
 
-    bool load_plugin(const std::string& file_name, const std::string& object_name)
+    template<typename... Ts>
+    bool load_plugin(const std::string& file_name, const Ts... object_name)
     {
         auto p = std::make_unique<pugg::detail::plugin>();
         if (p->load(file_name))
         {
-            add_driver(p->create_driver(object_name));
+            for(const auto n : {object_name...})
+            {
+                add_driver(p->create_driver(n));
+            }
+
             plugins_.push_back(std::move(p));
             return true;
         }
